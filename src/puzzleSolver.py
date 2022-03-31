@@ -28,10 +28,10 @@ def executeNode(puzzle):
     global puzzleList
     global found
     global result
-    if puzzle.countNotInRightPlace() == 0:
+    if puzzle.countNotInRightPlace() == 0:  # Jika sudah ketemu
         found = True
         result = puzzle
-    else:
+    else:   # Bangkitkan simpul anak
         if puzzle.blankUbin % 4 != 3 and puzzle.getLastStep() != "R":
             swapRightPuzzle = copy.deepcopy(puzzle)
             swapRightPuzzle.swapRight()
@@ -70,10 +70,8 @@ def findShortestDistanceIndex():
             index = i
     return index
     
-
-# Fungsi utama untuk mencari solusi puzzle
-# Digunakan untuk CLI
-def solvePuzzle(puzzleAwal):
+# Membersihkan variabel global
+def clearGlobalVariable():
     global found
     global result
     global puzzleList
@@ -82,29 +80,39 @@ def solvePuzzle(puzzleAwal):
     puzzleHistoryList = []
     found = False
     result = None
+
+
+# Fungsi utama untuk mencari solusi puzzle
+# Digunakan untuk CLI
+def solvePuzzle(puzzleAwal):
+    global found
+    global result
+    global puzzleList
+    global puzzleHistoryList
+    clearGlobalVariable()
     before = time.time()
     puzzle = Puzzle(puzzleAwal)
     puzzle.initializeCLI()
+
+    # Cek apakah puzzle bisa diseelsaikan
     if (puzzle.sumOfKurang + puzzle.X) % 2 == 1:
         print("Sum of Kurang + X bernilai ganjil")
         print("Puzzle tidak dapat diselesaikan")
     else:
         print("Please wait...")
+
+        # Masukkan puzzle awal ke dalam antrian
         puzzleList = [puzzle]
+
+        # Eksekusi node sampai ketemu
         while len(puzzleList) > 0 and not found:
-            #print(puzzleList)
             idx = findShortestDistanceIndex()
-            #print("false =", puzzleList[idx].countNotInRightPlace())
-            #puzzleList[idx].print()
             executeNode(puzzleList[idx])
             puzzleList.pop(idx)
-        #result.print()
-        #print(result.steps)
         after = time.time()
 
         sp = SolvedPuzzle(puzzleAwal, result.steps)
         sp.printStepByStep()
-        print(sp.toStringList())
         print("Steps Count:", result.stepsCount)
         print("Time elapsed:",after-before, "seconds")
 
@@ -115,28 +123,27 @@ def getSolvedPuzzle(puzzleAwal):
     global result
     global puzzleList
     global puzzleHistoryList
-    puzzleList = []
-    puzzleHistoryList = []
-    found = False
-    result = None
+    clearGlobalVariable()
     before = time.time()
     puzzle = Puzzle(puzzleAwal)
     puzzle.initializeCLI()
+
+    # Cek apakah puzzle bisa diseelsaikan
     if (puzzle.sumOfKurang + puzzle.X) % 2 == 1:
         print("Sum of Kurang + X bernilai ganjil")
         print("Puzzle tidak dapat diselesaikan")
     else:
         print("Please wait...")
+
+        # Masukkan puzzle awal ke dalam antrian
         puzzleList = [puzzle]
+
+        # Eksekusi node sampai ketemu
         while len(puzzleList) > 0 and not found:
-            #print(puzzleList)
             idx = findShortestDistanceIndex()
-            #print("false =", puzzleList[idx].countNotInRightPlace())
-            #puzzleList[idx].print()
             executeNode(puzzleList[idx])
             puzzleList.pop(idx)
-        #result.print()
-        #print(result.steps)
+
         after = time.time()
 
         sp = SolvedPuzzle(puzzleAwal, result.steps)

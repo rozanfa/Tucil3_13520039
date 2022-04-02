@@ -140,8 +140,6 @@ class Puzzle:
         self.blankUbin = topUbin
         self.steps.append("U")
         self.stepsCount += 1
-        #print("U")
-        #self.print()
 
     # Menggeser ubin kosong ke bawah
     def swapDown(self):
@@ -150,8 +148,6 @@ class Puzzle:
         self.blankUbin = bottomUbin
         self.steps.append("D")
         self.stepsCount += 1
-        #print("D")
-        #self.print()
     
     # Menggeser ubin kosong ke kiri
     def swapLeft(self):
@@ -160,8 +156,6 @@ class Puzzle:
         self.blankUbin = leftUbin
         self.steps.append("L")
         self.stepsCount += 1
-        #print("L")
-        #self.print()
     
     # Menggeser ubin kosong ke kanan
     def swapRight(self):
@@ -170,8 +164,6 @@ class Puzzle:
         self.blankUbin = rightUbin
         self.steps.append("R")
         self.stepsCount += 1
-        #print("R")
-        #self.print()
 
     # Mengembalikan isi dari puzzle dalam bentuk list of string
     def toStringList(self):

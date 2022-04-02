@@ -4,24 +4,20 @@ from fileReader import readPuzzleFromFile
 from puzzleSolver import getSolvedPuzzle, solvePuzzle
 from Puzzle import Puzzle
 from puzzleRandomizer import getRandomPuzzle
-import time
 from tkinter import filedialog as fd
   
-top = Tk()   
-top.geometry("500x300")
-top.minsize(500,300)
-top.maxsize(500,300)  
+# Deklarasi variabel global
+mainGUI = Tk()   
+mainGUI.geometry("500x300")
+mainGUI.minsize(500,300)
+mainGUI.maxsize(500,300)  
 p = None
 puzzle = None
-timeElapsed = None
-
-def hide_component(component):
-    component.pack_forget()
-
-def show_component(component):
-    component.pack()
+timeElapsed = 0
+nodeCount = 0
 
 
+# Inisiasi GUI setelah menerima puzzle
 def initialize(puzzleInput):
     global puzzle
     puzzle = None
@@ -66,7 +62,6 @@ def initialize(puzzleInput):
     kurang_15.config(text = f"KURANG(15) = {kurangList[14]}")
     kurang_16.config(text = f"KURANG(16) = {kurangList[15]}")
     X = puzzleObject.checkX()
-    print(X)
     X_label.config(text = f"X = {X}")
     sumOfKurangValue = puzzleObject.sumOfKurang
     sum_of_kurang.config(text = f"SUM(KURANG) + X = {sumOfKurangValue + X}")
@@ -78,9 +73,10 @@ def initialize(puzzleInput):
         lPuzzleCanBeSolved.config(text = "Puzzle can't be solved")
     lPleaseWait.config(text = "Please click and wait...")
     lTimeElapsed.config(text = "")
+    lNodeCount.config(text = "")
 
     
-
+# Memilih file untuk puzzle
 def chooseFile():
     global p
     global puzzle
@@ -96,6 +92,7 @@ def chooseFile():
     
     bAnimate.config(state=DISABLED)
 
+# Mendapatkan puzzle random
 def getRandom():
     global p
     global puzzle
@@ -109,29 +106,23 @@ def getRandom():
     bAnimate.config(state=DISABLED)
     
 
-def showPleaseWait():
-    lPleaseWait.config(text = "Please wait...")
-
-def hidePleaseWait():
-    lPleaseWait.config(text = "Complete!")
-
-
+# Menyelesaikan puzzle
 def solvePuzzle():
-    showPleaseWait()
     global p
     global puzzle
     global timeElapsed
-    top.after(1000, lambda: showPleaseWait())
+    global nodeCount
     p = None
-    p, timeElapsed = getSolvedPuzzle(puzzle)
+    p, timeElapsed, nodeCount = getSolvedPuzzle(puzzle)
     b1.config(state=ACTIVE)
     b2.config(state=ACTIVE)
     bAnimate.config(state=ACTIVE)
-    top.after(1000, lambda: hidePleaseWait())
-    hidePleaseWait()
+    lPleaseWait.config(text = "Complete!")
     lTimeElapsed.config(text = "Time elapsed: {:.5f}".format(timeElapsed))
+    lNodeCount.config(text = "Node raised: {}".format(nodeCount))
+    bSolvePuzzle.config(state=DISABLED)
 
-
+# Menempelkan puzzle ke label
 def putInLabel():
     global p
     arr = p.toStringList()
@@ -152,7 +143,7 @@ def putInLabel():
     label15.config(text = arr[14])
     label16.config(text = arr[15])
 
-
+# Maju ke langkah selanjutnya
 def next():
     global p
     p.nextStep()
@@ -174,10 +165,11 @@ def next():
     label15.config(text = arr[14])
     label16.config(text = arr[15])
     if p.state == p.stepsCount:
-        stateLabel.config(text = "Final State")
+        stateLabel.config(text = f"State: {p.state} (Final State)")
     else:
         stateLabel.config(text = "State: " + str(p.state))
-    
+
+# Mundur ke langkah sebelumnya
 def prev():
     global p
     p.prevStep()
@@ -199,22 +191,23 @@ def prev():
     label15.config(text = arr[14])
     label16.config(text = arr[15])
     if p.state == 0:
-        stateLabel.config(text = "Initial State")
+        stateLabel.config(text = "State: 0 (Initial State)")
     else:
         stateLabel.config(text = "State: " + str(p.state))
 
+# Animasikan puzzle
 def animatePuzzle():
     global p
     p = SolvedPuzzle(puzzle, p.steps)
     for i in range(p.stepsCount + 1):
         if i == 0:
-            top.after(i * 500, lambda: putInLabel())
+            mainGUI.after(i * 500, lambda: putInLabel())
         else:
-            top.after(i * 500, lambda: next())
+            mainGUI.after(i * 500, lambda: next())
 
 
 
-puzzleFrame = Frame(top, width = 200, height = 250)
+puzzleFrame = Frame(mainGUI, width = 200, height = 250)
 puzzleFrame.place(x = 300, y = 90)
 label1 = Label(puzzleFrame, text = " 1")
 label2 = Label(puzzleFrame, text = " 2")
@@ -264,7 +257,7 @@ stateLabel = Label(puzzleFrame, text = "Initial state")
 stateLabel.place(x = 20, y = 120)
 
 
-leftFrame = Frame(top, width = 300, height = 260)
+leftFrame = Frame(mainGUI, width = 300, height = 260)
 leftFrame.place(x = 20, y = 20)
 
 bOpenPuzzle = Button(leftFrame, text = "Open Puzzle", command = chooseFile)
@@ -311,17 +304,20 @@ sum_of_kurang.place(x = 20, y = 220)
 lPuzzleCanBeSolved = Label(leftFrame, text = "Choose a puzzle first")
 lPuzzleCanBeSolved.place(x = 20, y = 240)
 
-bSolvePuzzle = Button(top, text = "Solve Puzzle", command = solvePuzzle, state=DISABLED)
+bSolvePuzzle = Button(mainGUI, text = "Solve Puzzle", command = solvePuzzle, state=DISABLED)
 bSolvePuzzle.place(x = 340, y = 40)
 
-bAnimate = Button(top, text = "Animate", command = animatePuzzle, state=DISABLED)
+bAnimate = Button(mainGUI, text = "Animate", command = animatePuzzle, state=DISABLED)
 bAnimate.place(x = 350, y = 240)
 
-lPleaseWait = Label(top, text = "Choose a puzzle first")
+lPleaseWait = Label(mainGUI, text = "Choose a puzzle first")
 lPleaseWait.place(x = 340, y = 70)
 
 
 lTimeElapsed = Label(leftFrame, text = "")
 lTimeElapsed.place(x = 175, y = 240)
 
-top.mainloop() 
+lNodeCount = Label(leftFrame, text = "")
+lNodeCount.place(x = 175, y = 220)
+
+mainGUI.mainloop() 

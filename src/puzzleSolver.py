@@ -4,7 +4,6 @@ from SolvedPuzzle import SolvedPuzzle
 import time
 
 puzzleList = []
-puzzleHistoryList = []
 puzzleHistoryMap = {}
 found = False
 result = None
@@ -17,14 +16,7 @@ def checkIfUbinIsEqual(ubin1, ubin2):
             return False
     return True
 
-# Mengecek apakah node sudah pernah ada
-def nodeIsInHistory(node):
-    global puzzleHistoryList
-    for i in range(len(puzzleHistoryList)):
-        if checkIfUbinIsEqual(puzzleHistoryList[i].ubin, node.ubin):
-            return True
-    return False
-
+# Mengecek apakah puzzle sudah pernah ada
 def nodeIdIsInHistoryMap(puzzle):
     global puzzleHistoryMap
     id = puzzle.toPuzzleId()
@@ -88,9 +80,9 @@ def clearGlobalVariable():
     global found
     global result
     global puzzleList
-    global puzzleHistoryList
+    global puzzleHistoryMap
     puzzleList = []
-    puzzleHistoryList = []
+    puzzleHistoryMap = {}
     found = False
     result = None
 
@@ -101,7 +93,6 @@ def solvePuzzle(puzzleAwal):
     global found
     global result
     global puzzleList
-    global puzzleHistoryList
     global nodeCount
     clearGlobalVariable()
     before = time.time()
@@ -137,7 +128,6 @@ def getSolvedPuzzle(puzzleAwal):
     global found
     global result
     global puzzleList
-    global puzzleHistoryList
     clearGlobalVariable()
     before = time.time()
     puzzle = Puzzle(puzzleAwal)
@@ -162,6 +152,6 @@ def getSolvedPuzzle(puzzleAwal):
         after = time.time()
 
         sp = SolvedPuzzle(puzzleAwal, result.steps)
-        return sp, after-before
+        return sp, after-before, nodeCount
 
 

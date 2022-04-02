@@ -8,8 +8,8 @@ def getRandomPuzzle():
     count = 0
 
     # Acak acak puzzle
-    for i in range(30):
-        r = random.randint(1,5)
+    for i in range(50):
+        r = random.randint(1,6)
         if (r == 1 or r == 5) and p.blankUbin > 3 and p.getLastStep() != "U":
             p.swapUp()
             count += 1
@@ -22,7 +22,7 @@ def getRandomPuzzle():
                 count += 1
             except:
                 pass
-        if r == 4 and p.blankUbin % 4 != 0 and p.getLastStep() != "L":
+        if (r == 4 or r == 6) and p.blankUbin % 4 != 0 and p.getLastStep() != "L":
             try:
                 p.swapLeft()
                 count += 1

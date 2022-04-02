@@ -86,7 +86,6 @@ class SolvedPuzzle:
         list = []
         for i in range(16):
             list.append(str(self.ubin[i].value if self.ubin[i].value != 16 else " ").rjust(2, ' '))
-        print(list)
         return list
 
     # Pergi ke state selanjutnya

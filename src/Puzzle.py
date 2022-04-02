@@ -181,7 +181,7 @@ class Puzzle:
         print(list)
         return list
 
-    def toUbinId(self):
+    def toPuzzleId(self):
         id = ""
         for i in range(16):
             id += str(self.ubin[i].value)

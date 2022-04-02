@@ -8,6 +8,7 @@ puzzleHistoryList = []
 puzzleHistoryMap = {}
 found = False
 result = None
+nodeCount = 0
 
 # Mengecek apakah dua ubin bernilai sama
 def checkIfUbinIsEqual(ubin1, ubin2):
@@ -24,17 +25,18 @@ def nodeIsInHistory(node):
             return True
     return False
 
-def nodeIdIsInHistoryMap(id):
+def nodeIdIsInHistoryMap(puzzle):
     global puzzleHistoryMap
-    if id in puzzleHistoryMap:
-        return True
-    return False
+    id = puzzle.toPuzzleId()
+    return id in puzzleHistoryMap
 
 # Mengeksekusi node
 def executeNode(puzzle):
     global puzzleList
+    global puzzleHistoryMap
     global found
     global result
+    global nodeCount
     if puzzle.countNotInRightPlace() == 0:  # Jika sudah ketemu
         found = True
         result = puzzle
@@ -42,36 +44,40 @@ def executeNode(puzzle):
         if puzzle.blankUbin % 4 != 3 and puzzle.getLastStep() != "R":
             swapRightPuzzle = copy.deepcopy(puzzle)
             swapRightPuzzle.swapRight()
-            if not nodeIsInHistory(swapRightPuzzle):
+            if not nodeIdIsInHistoryMap(swapRightPuzzle):
                 puzzleList.append(swapRightPuzzle)
-                puzzleHistoryList.append(swapRightPuzzle)
+                puzzleHistoryMap[swapRightPuzzle.toPuzzleId()] = True
+                nodeCount += 1
         if puzzle.blankUbin % 4 != 0 and puzzle.getLastStep() != "L":
             swapLeftPuzzle = copy.deepcopy(puzzle)
             swapLeftPuzzle.swapLeft()
-            if not nodeIsInHistory(swapLeftPuzzle):
+            if not nodeIdIsInHistoryMap(swapLeftPuzzle):
                 puzzleList.append(swapLeftPuzzle)
-                puzzleHistoryList.append(swapLeftPuzzle)
+                puzzleHistoryMap[swapLeftPuzzle.toPuzzleId()] = True
+                nodeCount += 1
         if puzzle.blankUbin < 12 and puzzle.getLastStep() != "D":
             swapDownPuzzle = copy.deepcopy(puzzle)
             swapDownPuzzle.swapDown()
-            if not nodeIsInHistory(swapDownPuzzle):
+            if not nodeIdIsInHistoryMap(swapDownPuzzle):
                 puzzleList.append(swapDownPuzzle)
-                puzzleHistoryList.append(swapDownPuzzle)
+                puzzleHistoryMap[swapDownPuzzle.toPuzzleId()] = True
+                nodeCount += 1
         if puzzle.blankUbin > 3 and puzzle.getLastStep() != "U":
             swapUpPuzzle = copy.deepcopy(puzzle)
             swapUpPuzzle.swapUp()
-            if not nodeIsInHistory(swapUpPuzzle):
+            if not nodeIdIsInHistoryMap(swapUpPuzzle):
                 puzzleList.append(swapUpPuzzle)
-                puzzleHistoryList.append(swapUpPuzzle)
+                puzzleHistoryMap[swapUpPuzzle.toPuzzleId()] = True
+                nodeCount += 1
 
 
 # Mencari index node dengan jarak terpendek
 def findShortestDistanceIndex():
     global puzzleList
-    min = puzzleList[0].countNotInRightPlace() + puzzleList[0].stepsCount
+    min = puzzleList[0].countNotInRightPlace() + puzzleList[0].stepsCount * 0.05
     index = 0
     for i in range(1, len(puzzleList)):
-        currCost = puzzleList[i].countNotInRightPlace() + puzzleList[i].stepsCount
+        currCost = puzzleList[i].countNotInRightPlace() + puzzleList[i].stepsCount * 0.05
         if currCost < min:
             min = currCost
             index = i
@@ -96,6 +102,7 @@ def solvePuzzle(puzzleAwal):
     global result
     global puzzleList
     global puzzleHistoryList
+    global nodeCount
     clearGlobalVariable()
     before = time.time()
     puzzle = Puzzle(puzzleAwal)
@@ -120,7 +127,8 @@ def solvePuzzle(puzzleAwal):
 
         sp = SolvedPuzzle(puzzleAwal, result.steps)
         sp.printStepByStep()
-        print("Steps Count:", result.stepsCount)
+        print("Node count:", nodeCount)
+        print("Step count:", result.stepsCount)
         print("Time elapsed:",after-before, "seconds")
 
 # Fungsi utama untuk mendapatkan puzzle yang sudah dipecahkan

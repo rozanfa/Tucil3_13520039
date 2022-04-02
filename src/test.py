@@ -106,6 +106,7 @@ def getRandom():
     puzzle = None
     initialize(getRandomPuzzle())
     bSolvePuzzle.config(state=ACTIVE)
+    bAnimate.config(state=DISABLED)
     
 
 def showPleaseWait():

@@ -1,4 +1,5 @@
-from tkinter import * 
+from tkinter import *
+from SolvedPuzzle import SolvedPuzzle 
 from fileReader import readPuzzleFromFile
 from puzzleSolver import getSolvedPuzzle, solvePuzzle
 from Puzzle import Puzzle
@@ -93,7 +94,7 @@ def chooseFile():
     initialize(readPuzzleFromFile(filename))
     bSolvePuzzle.config(state=ACTIVE)
     
-    #bAnimate.config(state=DISABLED)
+    bAnimate.config(state=DISABLED)
 
 def getRandom():
     global p
@@ -124,10 +125,32 @@ def solvePuzzle():
     p, timeElapsed = getSolvedPuzzle(puzzle)
     b1.config(state=ACTIVE)
     b2.config(state=ACTIVE)
-    #bAnimate.config(state=ACTIVE)
+    bAnimate.config(state=ACTIVE)
     top.after(1000, lambda: hidePleaseWait())
     hidePleaseWait()
     lTimeElapsed.config(text = "Time elapsed: {:.5f}".format(timeElapsed))
+
+
+def putInLabel():
+    global p
+    arr = p.toStringList()
+    label1.config(text = arr[0])
+    label2.config(text = arr[1])
+    label3.config(text = arr[2])
+    label4.config(text = arr[3])
+    label5.config(text = arr[4])
+    label6.config(text = arr[5])
+    label7.config(text = arr[6])
+    label8.config(text = arr[7])
+    label9.config(text = arr[8])
+    label10.config(text = arr[9])
+    label11.config(text = arr[10])
+    label12.config(text = arr[11])
+    label13.config(text = arr[12])
+    label14.config(text = arr[13])
+    label15.config(text = arr[14])
+    label16.config(text = arr[15])
+
 
 def next():
     global p
@@ -179,76 +202,15 @@ def prev():
     else:
         stateLabel.config(text = "State: " + str(p.state))
 
-    '''
-    while p.state < p.stepsCount:
-        arr = p.toStringList()
-        label1.config(text = arr[0])
-        label2.config(text = arr[1])
-        label3.config(text = arr[2])
-        label4.config(text = arr[3])
-        label5.config(text = arr[4])
-        label6.config(text = arr[5])
-        label7.config(text = arr[6])
-        label8.config(text = arr[7])
-        label9.config(text = arr[8])
-        label10.config(text = arr[9])
-        label11.config(text = arr[10])
-        label12.config(text = arr[11])
-        label13.config(text = arr[12])
-        label14.config(text = arr[13])
-        label15.config(text = arr[14])
-        label16.config(text = arr[15])
-        p.nextStep()
-        arr = p.toStringList()
-        label1.config(text = arr[0])
-        label2.config(text = arr[1])
-        label3.config(text = arr[2])
-        label4.config(text = arr[3])
-        label5.config(text = arr[4])
-        label6.config(text = arr[5])
-        label7.config(text = arr[6])
-        label8.config(text = arr[7])
-        label9.config(text = arr[8])
-        label10.config(text = arr[9])
-        label11.config(text = arr[10])
-        label12.config(text = arr[11])
-        label13.config(text = arr[12])
-        label14.config(text = arr[13])
-        label15.config(text = arr[14])
-        label16.config(text = arr[15])
-        time.sleep(0.5)
-'''
-
 def animatePuzzle():
-    '''
     global p
-    p.state = 0
-    while p.state < p.stepsCount:
-        p.nextStep()
-        arr = p.toStringList()
-        label1.config(text = arr[0])
-        label2.config(text = arr[1])
-        label3.config(text = arr[2])
-        label4.config(text = arr[3])
-        label5.config(text = arr[4])
-        label6.config(text = arr[5])
-        label7.config(text = arr[6])
-        label8.config(text = arr[7])
-        label9.config(text = arr[8])
-        label10.config(text = arr[9])
-        label11.config(text = arr[10])
-        label12.config(text = arr[11])
-        label13.config(text = arr[12])
-        label14.config(text = arr[13])
-        label15.config(text = arr[14])
-        label16.config(text = arr[15])
-        '''
-    global p
-    p.state = 0
+    p = SolvedPuzzle(puzzle, p.steps)
+    for i in range(p.stepsCount + 1):
+        if i == 0:
+            top.after(i * 500, lambda: putInLabel())
+        else:
+            top.after(i * 500, lambda: next())
 
-    top.after(1000, lambda: next())
-    top.after(1000, lambda: next())
-    top.after(1000, lambda: next())
 
 
 puzzleFrame = Frame(top, width = 200, height = 250)
@@ -269,9 +231,6 @@ label13 = Label(puzzleFrame, text = "13")
 label14 = Label(puzzleFrame, text = "14")
 label15 = Label(puzzleFrame, text = "15")
 label16 = Label(puzzleFrame, text = "  ")
-
-
-
 
 
 
@@ -304,7 +263,7 @@ stateLabel = Label(puzzleFrame, text = "Initial state")
 stateLabel.place(x = 20, y = 120)
 
 
-leftFrame = Frame(top, width = 240, height = 260)
+leftFrame = Frame(top, width = 300, height = 260)
 leftFrame.place(x = 20, y = 20)
 
 bOpenPuzzle = Button(leftFrame, text = "Open Puzzle", command = chooseFile)
@@ -354,15 +313,14 @@ lPuzzleCanBeSolved.place(x = 20, y = 240)
 bSolvePuzzle = Button(top, text = "Solve Puzzle", command = solvePuzzle, state=DISABLED)
 bSolvePuzzle.place(x = 340, y = 40)
 
-#bAnimate = Button(top, text = "Animate", command = animatePuzzle, state=DISABLED)
-#bAnimate.place(x = 350, y = 240)
+bAnimate = Button(top, text = "Animate", command = animatePuzzle, state=DISABLED)
+bAnimate.place(x = 350, y = 240)
 
-lPleaseWait = Label(top, text = "Please click and wait...")
+lPleaseWait = Label(top, text = "Choose a puzzle first")
 lPleaseWait.place(x = 340, y = 70)
 
 
-lTimeElapsed = Label(puzzleFrame, text = "")
-lTimeElapsed.place(x = 20, y = 150)
+lTimeElapsed = Label(leftFrame, text = "")
+lTimeElapsed.place(x = 175, y = 240)
 
-lPleaseWait.config(text = "Please click and wait...")
 top.mainloop() 

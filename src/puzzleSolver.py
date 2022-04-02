@@ -5,6 +5,7 @@ import time
 
 puzzleList = []
 puzzleHistoryList = []
+puzzleHistoryMap = {}
 found = False
 result = None
 
@@ -21,6 +22,12 @@ def nodeIsInHistory(node):
     for i in range(len(puzzleHistoryList)):
         if checkIfUbinIsEqual(puzzleHistoryList[i].ubin, node.ubin):
             return True
+    return False
+
+def nodeIdIsInHistoryMap(id):
+    global puzzleHistoryMap
+    if id in puzzleHistoryMap:
+        return True
     return False
 
 # Mengeksekusi node
@@ -61,10 +68,10 @@ def executeNode(puzzle):
 # Mencari index node dengan jarak terpendek
 def findShortestDistanceIndex():
     global puzzleList
-    min = puzzleList[0].countNotInRightPlace() + puzzleList[0].stepsCount * 0.05
+    min = puzzleList[0].countNotInRightPlace() + puzzleList[0].stepsCount
     index = 0
     for i in range(1, len(puzzleList)):
-        currCost = puzzleList[i].countNotInRightPlace() + puzzleList[i].stepsCount * 0.05
+        currCost = puzzleList[i].countNotInRightPlace() + puzzleList[i].stepsCount
         if currCost < min:
             min = currCost
             index = i

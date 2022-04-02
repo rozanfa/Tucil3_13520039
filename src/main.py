@@ -4,6 +4,9 @@ from puzzleRandomizer import getRandomPuzzle
 import sys
 import os
 
+# Pindah direktori ke parent-nya
+os.chdir("..")
+
 # Buat string path ke folder test
 path = os.getcwd() + "\\test\\"
 

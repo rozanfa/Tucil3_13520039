@@ -5,16 +5,19 @@ class SolvedPuzzle:
     def __init__(self, listUbin, steps):
         self.steps = steps
         self.ubin = [Ubin(i) for i in listUbin]
-
+        self.ubinAwal = [Ubin(i) for i in listUbin]
 
         for i in range(16):
             if listUbin[i] == 16 :
                 self.blankUbin = i
+                self.blankUbinAwal = i
                 break
+        
+
 
         self.stepsCount = len(self.steps)
         self.state = 0
-
+        
         self.print()
 
     # Menukar 2 ubin

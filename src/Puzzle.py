@@ -180,3 +180,9 @@ class Puzzle:
             list.append(str(self.ubin[i].value if self.ubin[i].value != 16 else " ").rjust(2, ' '))
         print(list)
         return list
+
+    def toUbinId(self):
+        id = ""
+        for i in range(16):
+            id += str(self.ubin[i].value)
+        return id

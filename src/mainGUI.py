@@ -8,6 +8,7 @@ from tkinter import filedialog as fd
   
 # Deklarasi variabel global
 mainGUI = Tk()   
+mainGUI.title("15-Puzzle Solver")
 mainGUI.geometry("500x300")
 mainGUI.minsize(500,300)
 mainGUI.maxsize(500,300)  
@@ -68,12 +69,15 @@ def initialize(puzzleInput):
     if (sumOfKurangValue + X) % 2 == 0:
         bSolvePuzzle.config(state=ACTIVE)
         lPuzzleCanBeSolved.config(text = "Puzzle can be solved")
+        lPleaseWait.config(text = "Please click and wait...")
     else :
         bSolvePuzzle.config(state=DISABLED)
         lPuzzleCanBeSolved.config(text = "Puzzle can't be solved")
-    lPleaseWait.config(text = "Please click and wait...")
+        lPleaseWait.config(text = "")
     lTimeElapsed.config(text = "")
     lNodeCount.config(text = "")
+    stateLabel.config(text = "Initial State")
+
 
     
 # Memilih file untuk puzzle
@@ -88,7 +92,6 @@ def chooseFile():
     filename = None
     filename = fd.askopenfilename()
     initialize(readPuzzleFromFile(filename))
-    bSolvePuzzle.config(state=ACTIVE)
     
     bAnimate.config(state=DISABLED)
 
@@ -104,7 +107,7 @@ def getRandom():
     initialize(getRandomPuzzle())
     bSolvePuzzle.config(state=ACTIVE)
     bAnimate.config(state=DISABLED)
-    
+
 
 # Menyelesaikan puzzle
 def solvePuzzle():
@@ -121,6 +124,7 @@ def solvePuzzle():
     lTimeElapsed.config(text = "Time elapsed: {:.5f}".format(timeElapsed))
     lNodeCount.config(text = "Node raised: {}".format(nodeCount))
     bSolvePuzzle.config(state=DISABLED)
+    stateLabel.config(text = "Initial State")
 
 # Menempelkan puzzle ke label
 def putInLabel():
@@ -253,7 +257,7 @@ b2 = Button(puzzleFrame, text = "Prev", command = prev)
 b2.place(x = 20, y = 10)
 b2.config(state = DISABLED)
 
-stateLabel = Label(puzzleFrame, text = "Initial state")
+stateLabel = Label(puzzleFrame, text = "Initial State")
 stateLabel.place(x = 20, y = 120)
 
 

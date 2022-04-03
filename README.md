@@ -10,6 +10,12 @@ Membuat program untuk menyelesaikan 15-puzzle dengan algoritma Branch and Bound
 4. Mengeksekusi puzzle yang dipilih
 5. Ulangi sampai puzzle habis
 
+
+## Requirement Program
+1. Sistem operasi windows
+2. Python3 dengan tkinter
+
+
 ## Cara Menggunakan Program
 
 ### GUI

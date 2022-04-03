@@ -1,5 +1,6 @@
 # TucilStima3-BnB
 Tugas Kecil 3 IF2211 Strategi Algoritma
+
 Membuat program untuk menyelesaikan 15-puzzle dengan algoritma Branch and Bound
 
 ## Cara Kerja Program
